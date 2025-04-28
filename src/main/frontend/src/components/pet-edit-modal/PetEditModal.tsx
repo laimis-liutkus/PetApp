@@ -46,9 +46,9 @@ export const PetEditModal: FC<PetEditModalProps> = ({isModalOpen, selectedPet, o
     if (validateForm()) {
       const savedPet: Pet = {
         ...selectedPet,
-        name: formData?.name,
-        microchipNumber: formData?.microchipNumber,
-        specie: formData?.specie,
+        name: formData?.name?.trim(),
+        microchipNumber: formData?.microchipNumber?.trim(),
+        specie: formData?.specie?.trim(),
         birthdate: new Date(formData?.birthdate ?? '')
       };
       if (!savedPet.id) {
@@ -68,8 +68,12 @@ export const PetEditModal: FC<PetEditModalProps> = ({isModalOpen, selectedPet, o
       errors.name = `Pet name must be no longer than ${MAX_NAME_LENGTH} characters`;
     }
     const microchipNumber = formData.microchipNumber.trim();
-    if (microchipNumber && microchipNumber.length > MAX_MICROCHIP_NUMBER_LENGTH) {
-      errors.microchipNumber = `Microchip number must be no longer than ${MAX_MICROCHIP_NUMBER_LENGTH} characters`;
+    if (microchipNumber) {
+      if (microchipNumber.length > MAX_MICROCHIP_NUMBER_LENGTH) {
+        errors.microchipNumber = `Microchip number must be no longer than ${MAX_MICROCHIP_NUMBER_LENGTH} characters`;
+      } else if (!microchipNumber.match(/^\d+$/g)) {
+        errors.microchipNumber = `Microchip number must contain only digits`;
+      }
     }
     if (!formData.specie.trim()) {
       errors.specie = 'Pet specie is mandatory';
@@ -111,7 +115,10 @@ export const PetEditModal: FC<PetEditModalProps> = ({isModalOpen, selectedPet, o
       <Form onSubmit={handleSubmit}>
         <Modal.Body>
           <Form.Group className="mb-3">
-            <FormLabel>Name</FormLabel>
+            <FormLabel>
+              Name
+              <span className="text-danger"> *</span>
+            </FormLabel>
             <Form.Control
               type="text"
               name="name"
@@ -125,7 +132,7 @@ export const PetEditModal: FC<PetEditModalProps> = ({isModalOpen, selectedPet, o
             <Form.Control.Feedback type="invalid">{formErrors.name}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3">
-            <FormLabel>Microchip Number</FormLabel>
+            <FormLabel>Microchip Number (digits only)</FormLabel>
             <Form.Control
               name="microchipNumber"
               value={formData.microchipNumber}
@@ -138,7 +145,10 @@ export const PetEditModal: FC<PetEditModalProps> = ({isModalOpen, selectedPet, o
             <Form.Control.Feedback type="invalid">{formErrors.microchipNumber}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3">
-            <FormLabel>Specie</FormLabel>
+            <FormLabel>
+              Specie
+              <span className="text-danger"> *</span>
+            </FormLabel>
             <Form.Select
               name="specie"
               value={formData.specie}
@@ -153,7 +163,10 @@ export const PetEditModal: FC<PetEditModalProps> = ({isModalOpen, selectedPet, o
             <Form.Control.Feedback type="invalid">{formErrors.specie}</Form.Control.Feedback>
           </Form.Group>
           <Form.Group className="mb-3">
-            <FormLabel>Birthdate</FormLabel>
+            <FormLabel>
+              Birthdate
+              <span className="text-danger"> *</span>
+            </FormLabel>
             <Form.Control
               type="date"
               name="birthdate"
