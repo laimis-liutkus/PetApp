@@ -6,6 +6,7 @@ import com.app.pet.model.PetSpecie;
 import com.app.pet.model.PetSpecieDto;
 import com.app.pet.repository.PetRepository;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,17 +22,20 @@ public class PetService {
 
   private final PetRepository petRepository;
 
-  public List<PetDto> getPets() {
+  public List<PetDto> getAll() {
     return petRepository.findAll().stream().map(this::toDto).toList();
   }
 
-  public PetDto getPet(Long id) {
+  public PetDto getById(Long id) {
     return petRepository.findById(id)
         .map(this::toDto)
         .orElseThrow(() -> new IllegalStateException("Pet not found"));
   }
 
   public void add(PetDto petDto) {
+    petRepository.findByName(petDto.name()).ifPresent((pet) -> {
+      throw new IllegalArgumentException(String.format("Pet '%s' already exists", petDto.name()));
+    });
     petRepository.create(fromDto(petDto));
   }
 
@@ -39,7 +43,7 @@ public class PetService {
     petRepository.update(id, fromDto(petDto));
   }
 
-  public void deletePet(Long id) {
+  public void delete(Long id) {
     petRepository.deleteById(id);
   }
 
@@ -50,9 +54,12 @@ public class PetService {
   }
 
   private Pet fromDto(PetDto petDto) {
+    final String microchipNumber = StringUtils.isBlank(petDto.microchipNumber())
+        ? null
+        : petDto.microchipNumber();
     return Pet.builder()
         .id(petDto.id())
-        .microchipNumber(petDto.microchipNumber())
+        .microchipNumber(microchipNumber)
         .name(petDto.name())
         .specie(petDto.specie())
         .birthdate(petDto.birthdate())

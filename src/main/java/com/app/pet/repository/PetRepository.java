@@ -22,6 +22,12 @@ public interface PetRepository {
   )
   Optional<Pet> findById(Long id);
 
+  @Select("""
+      select * from pet
+      where name = #{name}
+      """)
+  Optional<Pet> findByName(String name);
+
   @Insert("""
       insert into pet (microchip_number, name, specie, birthdate) 
       values (#{microchipNumber}, #{name}, #{specie}, #{birthdate})

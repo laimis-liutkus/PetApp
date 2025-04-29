@@ -1,0 +1,1 @@
+alter table pet add constraint uc_pet_name unique (name);

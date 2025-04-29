@@ -20,12 +20,12 @@ public class PetController {
 
   @GetMapping(produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
   public List<PetDto> getPets() {
-    return petService.getPets();
+    return petService.getAll();
   }
 
   @GetMapping(value = "/{id}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
   public PetDto getPet(@PathVariable Long id) {
-    return petService.getPet(id);
+    return petService.getById(id);
   }
 
   @PostMapping
@@ -41,7 +41,7 @@ public class PetController {
 
   @DeleteMapping("/{id}")
   public void deletePet(@PathVariable Long id) {
-    petService.deletePet(id);
+    petService.delete(id);
   }
 
   @GetMapping(value = "/species", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
