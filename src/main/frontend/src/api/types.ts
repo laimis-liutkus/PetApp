@@ -1,3 +1,5 @@
+export const GLOBAL_ERROR_MSG_KEY = 'globalError';
+
 export interface Pet {
   id?: number;
   microchipNumber?: string;

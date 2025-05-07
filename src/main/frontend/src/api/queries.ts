@@ -1,12 +1,12 @@
-import axios from 'axios';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {Pet, PetSpecie} from './types.ts';
+import {axiosInstance} from '@/api/axios.ts';
 
 export const useGetAllPets = () => {
   return useQuery({
     queryKey: ['useGetAllPets'],
     queryFn: () => {
-      return axios.get<Pet[]>('http://localhost:8080/api/pets', {
+      return axiosInstance.get<Pet[]>('/pets', {
         transformResponse: [transformResponsePets]
       });
     },
@@ -17,7 +17,7 @@ export const useGetAllPetSpecies = () => {
   return useQuery({
     queryKey: ['useGetAllPetSpecies'],
     queryFn: () => {
-      return axios.get<PetSpecie[]>('http://localhost:8080/api/pets/species');
+      return axiosInstance.get<PetSpecie[]>('/pets/species');
     },
   });
 };
@@ -26,7 +26,7 @@ export const useGetAllPetSpecies = () => {
 export const useAddPet = () => {
   return useMutation({
     mutationFn: async (pet: Pet) => {
-      return axios.post(`http://localhost:8080/api/pets`, pet);
+      return axiosInstance.post('/pets', pet);
     }
   });
 };
@@ -34,7 +34,7 @@ export const useAddPet = () => {
 export const useUpdatePet = () => {
   return useMutation({
     mutationFn: async (pet: Pet) => {
-      return axios.put(`http://localhost:8080/api/pets/${pet.id}`, pet);
+      return axiosInstance.put(`/pets/${pet.id}`, pet);
     }
   });
 };
@@ -42,7 +42,7 @@ export const useUpdatePet = () => {
 export const useDeletePet = () => {
   return useMutation({
     mutationFn: async (id: number) => {
-      return axios.delete(`http://localhost:8080/api/pets/${id}`);
+      return axiosInstance.delete(`/pets/${id}`);
     }
   });
 };
@@ -62,4 +62,3 @@ const transformResponsePets = (rawResponse: string): Pet[] => {
     age: item.age,
   }));
 };
-

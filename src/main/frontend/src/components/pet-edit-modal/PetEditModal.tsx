@@ -3,9 +3,11 @@ import {Pet, PetSpecie} from '@/api/types.ts';
 import {Button, Form, FormLabel, Modal} from 'react-bootstrap';
 import {formattedDate} from '@/utils/dateUtils.ts';
 import {useAddPet, useGetAllPetSpecies, useUpdatePet} from '@/api/queries.ts';
+import {ErrorAlert} from '@/components/global-error/ErrorAlert.tsx';
 
 const MAX_NAME_LENGTH = 255;
 const MAX_MICROCHIP_NUMBER_LENGTH = 20;
+const EMPTY_SPECIE: PetSpecie = {name: '', title: ''};
 
 interface FormData {
   name: string;
@@ -33,6 +35,7 @@ export const PetEditModal: FC<PetEditModalProps> = ({isModalOpen, selectedPet, o
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [formErrors, setFormErrors] = useState(initialFormErrors);
   const [petSpecies, setPetSpecies] = useState<PetSpecie[]>([]);
+
   const {
     data: petSpecieData,
     isFetching: isPetSpecieFetching,
@@ -99,11 +102,9 @@ export const PetEditModal: FC<PetEditModalProps> = ({isModalOpen, selectedPet, o
 
   useEffect(() => {
     if (!isPetSpecieFetching && !isPetSpecieError && petSpecieData) {
-      setPetSpecies([{name: '', title: ''}].concat(petSpecieData.data));
+      setPetSpecies([EMPTY_SPECIE].concat(petSpecieData.data));
     }
   }, [isPetSpecieFetching, isPetSpecieError, petSpecieData]);
-
-  console.log('isPetSpecieError', isPetSpecieError);
 
   return (
     <Modal show={isModalOpen} animation={true}>
@@ -114,6 +115,7 @@ export const PetEditModal: FC<PetEditModalProps> = ({isModalOpen, selectedPet, o
       </Modal.Header>
       <Form onSubmit={handleSubmit}>
         <Modal.Body>
+          <ErrorAlert/>
           <Form.Group className="mb-3">
             <FormLabel>
               Name
