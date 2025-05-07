@@ -4,18 +4,14 @@ import {useErrorContext} from '@/providers/ErrorContext.tsx';
 
 export const ErrorAlert: FC = () => {
   const {globalError, setGlobalError} = useErrorContext();
-  const [error, setError] = useState<strign | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log('====> On set error locally');
     if (globalError) {
-      console.log('====> Global Error:', globalError);
       setError(globalError);
       setGlobalError(null);
     }
   }, [globalError]);
-
-  console.log('====> Error:', error);
 
   if (!error) return null;
   return (
