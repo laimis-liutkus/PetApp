@@ -5,10 +5,9 @@ import {axiosInstance} from '@/api/axios.ts';
 export const useGetAllPets = () => {
   return useQuery({
     queryKey: ['useGetAllPets'],
-    queryFn: () => {
-      return axiosInstance.get<Pet[]>('/pets', {
-        transformResponse: [transformResponsePets]
-      });
+    queryFn: async () => {
+      const res = await axiosInstance.get<Pet[]>('/pets');
+      return transformResponsePets(res?.data);
     },
   });
 };
@@ -21,7 +20,6 @@ export const useGetAllPetSpecies = () => {
     },
   });
 };
-
 
 export const useAddPet = () => {
   return useMutation({
@@ -47,11 +45,8 @@ export const useDeletePet = () => {
   });
 };
 
-const transformResponsePets = (rawResponse: string): Pet[] => {
-  const res = JSON.parse(rawResponse);
-  if (!res || !res.length) {
-    return [];
-  }
+const transformResponsePets = (res: any): Pet[] => {
+  console.log('Transforming', res);
   return res.map((item: any) => ({
     id: item.id,
     name: item.name,

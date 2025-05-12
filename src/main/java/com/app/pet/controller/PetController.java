@@ -48,5 +48,4 @@ public class PetController {
   public List<PetSpecieDto> getPetSpecies() {
     return petService.getPetSpecies();
   }
-
 }

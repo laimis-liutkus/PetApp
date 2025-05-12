@@ -19,7 +19,7 @@ export const PetList: FC = () => {
 
   useEffect(() => {
     if (!isPetDataFetching && !isPetDataError && petData) {
-      setPets(petData.data);
+      setPets(petData);
     }
   }, [petData, isPetDataFetching, isPetDataError]);
 

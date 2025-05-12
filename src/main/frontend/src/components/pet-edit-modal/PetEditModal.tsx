@@ -3,7 +3,6 @@ import {Pet, PetSpecie} from '@/api/types.ts';
 import {Button, Form, FormLabel, Modal} from 'react-bootstrap';
 import {formattedDate} from '@/utils/dateUtils.ts';
 import {useAddPet, useGetAllPetSpecies, useUpdatePet} from '@/api/queries.ts';
-import {ErrorAlert} from '@/components/global-error/ErrorAlert.tsx';
 
 const MAX_NAME_LENGTH = 255;
 const MAX_MICROCHIP_NUMBER_LENGTH = 20;
@@ -107,7 +106,7 @@ export const PetEditModal: FC<PetEditModalProps> = ({isModalOpen, selectedPet, o
   }, [isPetSpecieFetching, isPetSpecieError, petSpecieData]);
 
   return (
-    <Modal show={isModalOpen} animation={true}>
+    <Modal show={isModalOpen} animation={true} centered>
       <Modal.Header onClick={() => onClose(false)} closeButton>
         <Modal.Title>
           {selectedPet ? `Pet '${selectedPet.name}'` : 'Add Pet'}
@@ -115,7 +114,6 @@ export const PetEditModal: FC<PetEditModalProps> = ({isModalOpen, selectedPet, o
       </Modal.Header>
       <Form onSubmit={handleSubmit}>
         <Modal.Body>
-          <ErrorAlert/>
           <Form.Group className="mb-3">
             <FormLabel>
               Name
@@ -182,9 +180,6 @@ export const PetEditModal: FC<PetEditModalProps> = ({isModalOpen, selectedPet, o
             />
             <Form.Control.Feedback type="invalid">{formErrors.birthdate}</Form.Control.Feedback>
           </Form.Group>
-          {isPetSpecieError && (
-            <p>Error!</p>
-          )}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => onClose(false)}>Cancel</Button>

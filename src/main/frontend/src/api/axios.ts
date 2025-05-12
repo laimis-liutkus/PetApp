@@ -12,11 +12,11 @@ axiosInstance.interceptors.response.use(
 );
 
 const handleError = (error: AxiosError) => {
+  console.log('Handling global error:', error);
   const errorMessage: string = `${error.response?.data}`
     || error.message
     || 'Something went wrong, please check the logs';
   if (setGlobalError) {
-    console.log('Setting global error:', errorMessage);
     setGlobalError(errorMessage);
   }
   return Promise.reject(error);
